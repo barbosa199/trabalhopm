@@ -1,89 +1,54 @@
 package com.example.teste.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
 
-public class Pessoa implements Parcelable{
-    public String nome;
-    public String numero;
-    public String idade;
-    public String email;
-    public String codpostal;
-    public String pais;
+public class Pessoa implements Serializable {
+    private Integer id;
+    private String nome;
+    private String numero;
+    private String idade;
+    private String email;
+    private String codpostal;
+    private String pais;
+    private String genero;
+    private String localidade_id;
 
-    public Pessoa(String nome, String numero, String idade, String email, String codpostal, String pais){
-        this.nome=nome;
-        this.numero=numero;
-        this.idade=idade;
-        this.email=email;
-        this.codpostal=codpostal;
-        this.pais=pais;
+
+    public Pessoa(Integer id, String nome, String numero, String idade, String email, String codpostal, String pais, String genero, String localidade_id){
+        this.id = id;
+        this.nome = nome;
+        this.numero = numero;
+        this.idade = idade;
+        this.email = email;
+        this.codpostal = codpostal;
+        this.pais = pais;
+        this.genero = genero;
+        this.localidade_id = localidade_id;
     }
 
-
-    protected Pessoa(Parcel in) {
-        nome = in.readString();
-        numero = in.readString();
-        idade = in.readString();
-        email = in.readString();
-        codpostal = in.readString();
-        pais = in.readString();
-    }
-
-    public static final Creator<Pessoa> CREATOR = new Creator<Pessoa>() {
-        @Override
-        public Pessoa createFromParcel(Parcel in) {
-            return new Pessoa(in);
-        }
-
-        @Override
-        public Pessoa[] newArray(int size) {
-            return new Pessoa[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(nome);
-        dest.writeString(numero);
-        dest.writeString(idade);
-        dest.writeString(email);
-        dest.writeString(codpostal);
-        dest.writeString(pais);
+    public Integer getId() {
+        return id;
     }
 
     public String getCodpostal() {
         return codpostal;
     }
 
-    public String getEmail() {
-
-        return email;
-    }
+    public String getEmail() { return email; }
 
     public String getIdade() {
         return idade;
     }
 
-    public String getNome() {
+    public String getNome() { return nome; }
 
-        return nome;
-    }
+    public String getNumero() { return numero; }
 
-    public String getNumero() {
+    public String getPais() { return pais; }
 
-        return numero;
-    }
+    public String getGenero() { return genero; }
 
-    public String getPais() {
-
-        return pais;
-    }
+    public String getLocalidade_id() { return localidade_id; }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -106,5 +71,10 @@ public class Pessoa implements Parcelable{
     public void setPais(String pais) {
         this.pais = pais;
     }
+
+    public void setId(Integer id) {this.id = id;}
+    public void setGenero(String genero) {this.genero = genero;}
+    public void setLocalidade_id(String localidade_id) {this.localidade_id = localidade_id; }
 }
+
 

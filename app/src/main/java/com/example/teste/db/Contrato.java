@@ -19,8 +19,8 @@ public class Contrato {
         //Seleciona todas as linhas da tabela utilizador
         public static final String[] PROJECTION = {Utilizador._ID, Utilizador.TABLE_NAME, Utilizador.COLUMN_USER, Utilizador.COLUMN_PWD};
 
-            //Criar as variaveis e definir o tipo das variaveis
-            public static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + Utilizador.TABLE_NAME + "(" + Utilizador._ID + INT_TYPE + " PRIMARY KEY," +
+        //Criar as variaveis e definir o tipo das variaveis
+        public static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + Utilizador.TABLE_NAME + "(" + Utilizador._ID + INT_TYPE + " PRIMARY KEY," +
                 Utilizador.COLUMN_USER + TEXT_TYPE +"," + Utilizador.COLUMN_PWD + TEXT_TYPE +");";
         //elimina a tabela do utilizador
         public static final String SQL_DROP_ENTRIES = "DROP TABLE " + Utilizador.TABLE_NAME + ";";

@@ -31,7 +31,7 @@ public class CustomArrayAdapter extends ArrayAdapter<Pessoa> {
 
         ((TextView) convertView.findViewById(R.id.nome)).setText(p.getNome());
         ((TextView) convertView.findViewById(R.id.telefone)).setText(p.getNumero());
-        ((TextView) convertView.findViewById(R.id.email)).setText(p.getEmail());
+        ((TextView) convertView.findViewById(R.id.email)).setText(p.getPais());
         return convertView;
     }
 

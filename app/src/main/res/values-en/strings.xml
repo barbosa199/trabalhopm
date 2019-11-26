@@ -38,6 +38,10 @@
     <string name="M">Male</string>
     <string name="FM">Female</string>
 
+    <string name="NomePassInc">Name or password incorrect!</string>
+    <string name="PI">Passwords dont match</string>
+    <string name="NomeReg">User already taken</string>
+
     <string name="adicionar">Add</string>
     <string name="Aviso">Are you sure?</string>
     <string name="sim">Yes</string>

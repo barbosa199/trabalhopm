@@ -34,6 +34,10 @@
     <string name="M">Masculino</string>
     <string name="FM">Feminino</string>
 
+    <string name="NomePassInc">Nome ou password incorreto!</string>
+    <string name="PI">Passwords nao sao iguais</string>
+    <string name="NomeReg">Nome ja se encontra registado</string>
+
     <string name="Campos">Campos obrigatorios (*)</string>
     <string name="editado">Contacto Editado</string>
 
