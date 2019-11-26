@@ -25,7 +25,7 @@
         android:layout_height="match_parent"></TextView>
 
     <TextView
-        android:id="@+id/idade"
+        android:id="@+id/email"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"></TextView>

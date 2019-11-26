@@ -77,4 +77,3 @@ public class Pessoa implements Serializable {
     public void setLocalidade_id(String localidade_id) {this.localidade_id = localidade_id; }
 }
 
-
