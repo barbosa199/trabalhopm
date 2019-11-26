@@ -2,7 +2,6 @@ package com.example.teste;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,9 +27,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.teste.adapters.CustomArrayAdapter;
 import com.example.teste.adapters.MyCursorAdapter;
 import com.example.teste.db.Contrato;
 import com.example.teste.db.DB;
+import com.example.teste.entities.Pessoa;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Menu extends AppCompatActivity implements SensorEventListener {
     DB mDbHelper;
@@ -39,6 +54,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
     MyCursorAdapter madapter;
     SharedPreferences sharedPreferences;
     String user_name;
+    ArrayList<Pessoa> array = new ArrayList<>();
     int id_user;
     private SensorManager mSensorManager;
     private Sensor mProximity;
@@ -56,8 +72,6 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
         db = mDbHelper.getReadableDatabase();
 
         lista = findViewById(R.id.lista);
-        preencheLista();
-        getCursor();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -70,10 +84,10 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                c.moveToPosition(position);  //mover cursor para a posição desejada
-                int id_pessoa = c.getInt(c.getColumnIndex(Contrato.Contactos._ID));
+                Pessoa vp = array.get(position);
+                Integer id_user = vp.getId();
                 Intent intent = new Intent(Menu.this, Ver.class);
-                intent.putExtra("ver", id_pessoa); //passa o id pessoa para depois receber na classe ver
+                intent.putExtra("ver", id_user); //passa o id pessoa para depois receber na classe ver
                 startActivity(intent);
             }
         });
@@ -84,26 +98,60 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
-
+    /*
     public void getCursor() {
         c = db.rawQuery("select * from " + Contrato.Contactos.TABLE_NAME + " where " + Contrato.Contactos.COLUMN_IDUSER +
                 " = ?", new String[]{id_user + ""});
     }
-
+    */
     public void onResume() {
         super.onResume();
-        getCursor();
+        //getCursor();
         madapter = new MyCursorAdapter(this, c);
         lista.setAdapter(madapter);
-        mSensorManager.registerListener(Menu.this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(Menu.this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        if(!array.isEmpty()) {
+            array.clear();
+        }
 
-    }
-    private void preencheLista(){
-        c=db.query(false, Contrato.Contactos.TABLE_NAME, Contrato.Contactos.PROJECTION, null, null,
-                null,null,null,null);
+        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contactos/" + id_user;
 
-        madapter = new MyCursorAdapter(this, c);
-        lista.setAdapter(madapter);
+
+        // Formulate the request and handle the response.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //Toast.makeText(getActivity(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                            JSONArray arr = response.getJSONArray("DATA");
+                            //Percorre o array e pega nos valores pretendidos
+                            for (int i = 0; i < arr.length(); i++) {
+                                JSONObject obj = arr.getJSONObject(i);
+
+                                //Cria pessoa
+                                Pessoa p = new Pessoa(obj.getInt("id"), obj.getString("nome"), obj.getString("numero"), obj.getString("idade"), obj.getString("pais"),
+                                        obj.getString("codigopostal"), obj.getString("email"), obj.getString("genero"), obj.getString("localidade_id"));
+
+                                array.add(p);  //adiciona pessoa ao array
+                            }
+                            CustomArrayAdapter itemsAdapter = new CustomArrayAdapter(Menu.this, array);
+                            ((ListView) findViewById(R.id.lista)).setAdapter(itemsAdapter);
+                            //itemsAdapter.notifyDataSetChanged();
+                        } catch (JSONException ex) {
+                        }
+                        //Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(Menu.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("Erro", error.toString());
+                    }
+                });
+        MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest);
+
+
     }
 
     //Botao adicionar
@@ -125,34 +173,49 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int index = info.position; //posição no menu onde clicar
-        c.moveToPosition(index); //move o cursor para o contacto clicado
-        int id_pessoa = c.getInt(c.getColumnIndex(Contrato.Contactos._ID)); //obtem o ID do Contacto
+        final Pessoa p = array.get(index);
+        Integer id_user = p.getId();
 
         switch (item.getItemId()) {
             case R.id.editar:
                 //Chama a função editar o contacto
-              EditBox(id_pessoa);
-              return true;
+                EditBox(id_user);
+                return true;
             case R.id.remover:
                 //Faz um alerta para confirmar se quer "remover contacto"
-                RemoveConfirmationBox(id_pessoa);
+                RemoveConfirmationBox(id_user);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
     //Funcao para remover o contacto
-    public void RemoveConfirmationBox(final int id){
+    public void RemoveConfirmationBox(final int id_user){
         AlertDialog.Builder a_builder = new AlertDialog.Builder(this);
         a_builder.setMessage(getResources().getString(R.string.Aviso))
                 .setCancelable(true)
                 .setPositiveButton(getResources().getString(R.string.sim),new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        db.delete(Contrato.Contactos.TABLE_NAME, Contrato.Contactos._ID + " = ?", new String[]{id+""}); //eliminar o contacto com base no ID
-                        //onResume para atualizar a lista
-                        onResume();
+                        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contactodel/" + id_user;
 
+                        // Formulate the request and handle the response.
+                        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Toast.makeText(Menu.this, getResources().getString(R.string.removido), Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(Menu.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest);
+
+                        onResume();
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.nao),new DialogInterface.OnClickListener() {
@@ -169,7 +232,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
     }
 
     //Fun
-    public void EditBox(final int id_pessoa){
+    public void EditBox(final int id_user){
         final Dialog dialog=new Dialog(Menu.this);
         dialog.setContentView(R.layout.editar);
         TextView txtMessage= dialog.findViewById(R.id.txtmessage);
@@ -181,45 +244,88 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
         final EditText editText4= dialog.findViewById(R.id.txtinput4);
         final EditText editText5= dialog.findViewById(R.id.txtinput5);
         final EditText editText6= dialog.findViewById(R.id.txtinput6);
-        //query a bd para buscar dados da pessoa com id_pessoa
-        cursor = db.query(false, Contrato.Contactos.TABLE_NAME, Contrato.Contactos.PROJECTION,
-                Contrato.Contactos._ID + " = ?", new String[]{id_pessoa+""},
-                null, null,
-                null, null);
-        //moves the cursor to the first result (when the set is not empty)
-        cursor.moveToFirst();
-        //set text para mostrar os valores das variaveis
-        editText.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_NOME)));
-        editText2.setText(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_NUMERO))));
-        editText3.setText(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_IDADE))));
-        editText4.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_PAIS)));
-        editText5.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_CODIGOPOSTAL)));
-        editText6.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contrato.Contactos.COLUMN_EMAIL)));
-        cursor.close();
+        //query a bd para buscar dados da pessoa com id_user
+        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contacto/" + id_user;
+
+
+        // Formulate the request and handle the response.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            editText.setText(response.getString("nome"));
+                            editText2.setText(response.getString("numero"));
+                            editText3.setText(response.getString("idade"));
+                            editText4.setText(response.getString("pais"));
+                            editText5.setText(response.getString("codigopostal"));
+                            editText6.setText(response.getString("email"));
+                        } catch (JSONException ex) {
+                        }
+                        //Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(Menu.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("Erro", error.toString());
+                    }
+                });
+        MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest);
 
         Button bt= dialog.findViewById(R.id.btdone);
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues cv = new ContentValues();
+                String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contactoe/" + id_user;
 
-                float d=0;
+                Map<String, String> jsonParams = new HashMap<String, String>();
 
-                if((!editText3.getText().toString().isEmpty())){
-                    d = Float.parseFloat(editText3.getText().toString());
-                }
+                jsonParams.put("nome", editText.getText().toString());
+                jsonParams.put("numero", editText2.getText().toString());
+                jsonParams.put("idade", editText3.getText().toString());
+                jsonParams.put("pais", editText4.getText().toString());
+                jsonParams.put("codigopostal", editText5.getText().toString());
+                jsonParams.put("email", editText6.getText().toString());
 
-                cv.put(Contrato.Contactos.COLUMN_NOME, editText.getText().toString());
-                cv.put(Contrato.Contactos.COLUMN_NUMERO, Integer.parseInt(editText2.getText().toString()));
-                cv.put(Contrato.Contactos.COLUMN_IDADE, d);
-                cv.put(Contrato.Contactos.COLUMN_PAIS, editText4.getText().toString());
-                cv.put(Contrato.Contactos.COLUMN_CODIGOPOSTAL,editText5.getText().toString());
-                cv.put(Contrato.Contactos.COLUMN_EMAIL, editText6.getText().toString());
-                db.update(Contrato.Contactos.TABLE_NAME, cv, Contrato.Contactos._ID + " = ?", new String[]{id_pessoa+""});
-                onResume();
-                dialog.dismiss();
-                Toast.makeText(Menu.this,  getResources().getString(R.string.editado) , Toast.LENGTH_SHORT).show();
 
+                // Formulate the request and handle the response.
+                JsonObjectRequest putRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, new JSONObject(jsonParams), new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try{
+                                    if (response.getBoolean("status")) {
+                                        Toast.makeText(Menu.this, response.getString("MSG"), Toast.LENGTH_SHORT).show();
+                                    } else{
+                                        Toast.makeText(Menu.this, response.getString("MSG"), Toast.LENGTH_SHORT).show();
+                                    }
+                                    onResume();
+                                    dialog.dismiss();
+                                    Toast.makeText(Menu.this,  getResources().getString(R.string.editado) , Toast.LENGTH_SHORT).show();
+
+                                }
+                                catch(JSONException ex){
+                                    Toast.makeText(Menu.this, ex.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                Log.d("Erro", error.toString());
+                            }
+                        }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json; charset=utf-8");
+                        headers.put("User-agent", System.getProperty("http.agent"));
+                        return headers;
+                    }
+                };
+                MySingleton.getInstance(Menu.this).addToRequestQueue(putRequest);
             }
 
         });
@@ -291,7 +397,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
         if( event.sensor.getType() == Sensor.TYPE_PROXIMITY)
         {
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY){
-                 //Listar os ultimos 10 contactos inseridos
+                //Listar os ultimos 10 contactos inseridos
                 c = db.query(false, Contrato.Contactos.TABLE_NAME, Contrato.Contactos.PROJECTION,
                         Contrato.Contactos.COLUMN_IDUSER + " = ?", new String[]{id_user + ""},
                         null, null,
