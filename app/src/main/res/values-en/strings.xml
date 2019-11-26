@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <string name="bemvindo">Welcome to the App!</string>
+
+    <string name="nome">Insert Name (*)</string>
+    <string name="nome2">Name</string>
+
+
+    <string name="numero">Insert Mobile Number (*)</string>
+    <string name="numero2">Mobile Number</string>
+
+    <string name="idade">Insert Age (*)</string>
+    <string name="idade2">Age</string>
+
+    <string name="pais">Insert Country</string>
+    <string name="pais2">Country</string>
+
+    <string name="codpostal">Insert Postal Code</string>
+    <string name="codpostal2">Postal Code</string>
+
+    <string name="email">Insert Email</string>
+    <string name="email2">Email</string>
+
+    <string name="guardar">Save</string>
+
+    <string name="Iniciar">Start</string>
+    <string name="criar">Create Contact</string>
+    <string name="editar">Edit</string>
+    <string name="remover">Remove</string>
+    <string name="Campos">Required fields (*)</string>
+    <string name="editado">contact edited</string>
+
+    <string name="removido">Removed</string>
+    <string name="existente">Already exists</string>
+    <string name="pwd">Passwords do not match</string>
+
+    <string name="genero">Gender</string>
+    <string name="M">Male</string>
+    <string name="FM">Female</string>
+
+    <string name="adicionar">Add</string>
+    <string name="Aviso">Are you sure?</string>
+    <string name="sim">Yes</string>
+    <string name="nao">No</string>
+    <string name="carateres">Minimum:6 characters in both fields</string>
+</resources>

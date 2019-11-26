@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context=".Ver">
+
+    <TextView
+        android:id="@+id/nome"
+        android:text="@string/nome2"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/nome1"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_below="@+id/nome"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/numero"
+        android:text="@string/numero2"
+        android:layout_marginTop="25px"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_below="@+id/nome1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/numero1"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_below="@+id/numero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/idade"
+        android:text="@string/idade2"
+        android:layout_marginTop="25px"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_below="@+id/numero1"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/idade1"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_below="@+id/idade"
+        android:layout_alignLeft="@+id/idade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/pais"
+        android:text="@string/pais2"
+        android:layout_marginTop="25px"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_below="@id/idade1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/pais1"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_below="@id/pais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/codpostal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pais1"
+        android:layout_marginTop="25px"
+        android:text="@string/codpostal2"
+        android:textSize="25sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/codpostal1"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_below="@id/codpostal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/email"
+        android:text="@string/email2"
+        android:layout_marginTop="25px"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/codpostal1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/email1"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/genero"
+        android:text="Genero"
+        android:layout_marginTop="25px"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/email1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/genero1"
+        android:textSize="20sp"
+        android:layout_below="@id/genero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
