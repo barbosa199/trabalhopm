@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    tools:context=".Menu">
+
+
+    <TextView
+        android:id="@+id/nome"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></TextView>
+
+    <TextView
+        android:id="@+id/telefone"
+        android:layout_below="@+id/nome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></TextView>
+
+    <TextView
+        android:id="@+id/idade"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"></TextView>
+
+
+</RelativeLayout>
