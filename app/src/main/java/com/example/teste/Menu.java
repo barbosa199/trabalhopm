@@ -358,29 +358,112 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
                 onResume();
                 break;
             case R.id.orgAZ:
-                c = db.query(false, Contrato.Contactos.TABLE_NAME, Contrato.Contactos.PROJECTION,
-                        Contrato.Contactos.COLUMN_IDUSER + " = ?", new String[]{id_user+""},
-                        null, null,
-                        Contrato.Contactos.COLUMN_NOME + " ASC", null);
-                //Atualizar lista
-                madapter = new MyCursorAdapter(Menu.this, c);
-                lista.setAdapter(madapter);
+                if(!array.isEmpty()) {
+                    array.clear();
+                }
+
+                String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/ordenaraz/" + id_user;
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray arr = response.getJSONArray("DATA");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        JSONObject obj = arr.getJSONObject(i);
+
+                                        Pessoa p = new Pessoa(obj.getInt("id"), obj.getString("nome"), obj.getString("numero"), obj.getString("idade"), obj.getString("pais"),
+                                                obj.getString("codigopostal"), obj.getString("email"), obj.getString("genero"), obj.getString("localidade_id"));
+
+                                        array.add(p);
+                                    }
+                                    CustomArrayAdapter itemsAdapter = new CustomArrayAdapter(Menu.this, array);
+                                    ((ListView) lista.findViewById(R.id.lista)).setAdapter(itemsAdapter);
+                                } catch (JSONException ex) {
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(Menu.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Erro", error.toString());
+                            }
+                        });
+                MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest);
+
                 break;
             case R.id.orgIdade:
-                c = db.query(false, Contrato.Contactos.TABLE_NAME, Contrato.Contactos.PROJECTION,
-                        Contrato.Contactos.COLUMN_IDUSER + " = ?", new String[]{id_user+""},
-                        null, null,
-                        Contrato.Contactos.COLUMN_IDADE + " ASC", null);
-                //Atualizar lista
-                madapter = new MyCursorAdapter(Menu.this, c);
-                lista.setAdapter(madapter);
+                if(!array.isEmpty()) {
+                    array.clear();
+                }
+
+                String url3 = "https://unhelmeted-mint.000webhostapp.com/myslim/api/ordenaridade/" + id_user;
+
+                JsonObjectRequest jsObjRequest3 = new JsonObjectRequest
+                        (Request.Method.GET, url3, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray arr = response.getJSONArray("DATA");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        JSONObject obj = arr.getJSONObject(i);
+
+                                        Pessoa p = new Pessoa(obj.getInt("id"), obj.getString("nome"), obj.getString("numero"), obj.getString("idade"), obj.getString("pais"),
+                                                obj.getString("codigopostal"), obj.getString("email"), obj.getString("genero"), obj.getString("localidade_id"));
+
+                                        array.add(p);
+                                    }
+                                    CustomArrayAdapter itemsAdapter = new CustomArrayAdapter(Menu.this, array);
+                                    ((ListView) lista.findViewById(R.id.lista)).setAdapter(itemsAdapter);
+                                } catch (JSONException ex) {
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(Menu.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Erro", error.toString());
+                            }
+                        });
+                MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest3);
+
                 break;
             case R.id.soMasc:
-                c = db.rawQuery("select * from " + Contrato.Contactos.TABLE_NAME + " where " + Contrato.Contactos.COLUMN_GENERO +
-                        " = ? AND " + Contrato.Contactos.COLUMN_IDUSER + " = ?", new String[]{"Masculino",id_user+""});
-                //Atualizar lista
-                madapter = new MyCursorAdapter(Menu.this, c);
-                lista.setAdapter(madapter);
+                if(!array.isEmpty()) {
+                    array.clear();
+                }
+
+                String url2 = "https://unhelmeted-mint.000webhostapp.com/myslim/api/somasc/" + id_user;
+
+                JsonObjectRequest jsObjRequest2 = new JsonObjectRequest
+                        (Request.Method.GET, url2, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray arr = response.getJSONArray("DATA");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        JSONObject obj = arr.getJSONObject(i);
+
+                                        Pessoa p = new Pessoa(obj.getInt("id"), obj.getString("nome"), obj.getString("numero"), obj.getString("idade"), obj.getString("pais"),
+                                                obj.getString("codigopostal"), obj.getString("email"), obj.getString("genero"), obj.getString("localidade_id"));
+
+                                        array.add(p);
+                                    }
+                                    CustomArrayAdapter itemsAdapter = new CustomArrayAdapter(Menu.this, array);
+                                    ((ListView) lista.findViewById(R.id.lista)).setAdapter(itemsAdapter);
+                                } catch (JSONException ex) {
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(Menu.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Erro", error.toString());
+                            }
+                        });
+                MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest2);
+
                 break;
             default:
                 return super.onOptionsItemSelected(item);

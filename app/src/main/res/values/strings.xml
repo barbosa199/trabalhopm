@@ -40,10 +40,19 @@
 
     <string name="Campos">Campos obrigatorios (*)</string>
     <string name="editado">Contacto Editado</string>
+    <string name="criado">Contacto Criado</string>
 
     <string name="adicionar">Adicionar</string>
     <string name="Aviso">Tem a certeza?</string>
     <string name="sim">Sim</string>
     <string name="nao">Nao</string>
     <string name="carateres">Caracteres insuficientes. Mínimo: 6 caracteres em ambos os campos.</string>
+
+    <string name="Localidade">Localidade</string>
+    <string name="Viana">Viana do Castelo</string>
+    <string name="Braga">Braga</string>
+
+
+
+
 </resources>

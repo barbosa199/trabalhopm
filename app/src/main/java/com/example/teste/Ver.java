@@ -10,9 +10,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.teste.db.Contrato;
 import com.example.teste.db.DB;
 
@@ -27,7 +30,7 @@ public class Ver extends AppCompatActivity implements Serializable {
     DB mDbHelper;
     Cursor cursor;
     int id_user;
-    TextView caixa1,caixa2,caixa3,caixa4,caixa5,caixa6,caixa7;
+    TextView caixa1,caixa2,caixa3,caixa4,caixa5,caixa6,caixa7, caixa8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,9 @@ public class Ver extends AppCompatActivity implements Serializable {
         caixa5   = findViewById(R.id.codpostal1);
         caixa6   = findViewById(R.id.email1);
         caixa7   = findViewById(R.id.genero1);
+        caixa8   = findViewById(R.id.localidade1);
         id_user = getIntent().getExtras().getInt("ver");
-        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contactov/1" ;
+        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/contactov/" + id_user ;
         // Formulate the request and handle the response.
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -56,7 +60,7 @@ public class Ver extends AppCompatActivity implements Serializable {
                             caixa5.setText(job.getString("codigopostal"));
                             caixa6.setText(job.getString("email"));
                             caixa7.setText(job.getString("genero"));
-                            //joinIdPais(id);
+                            joinIdLocalidade(id_user);
                         } catch (JSONException ex) {
                         }//Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
                     }
@@ -68,8 +72,24 @@ public class Ver extends AppCompatActivity implements Serializable {
                     }
                 });
         MySingleton.getInstance(Ver.this).addToRequestQueue(jsObjRequest);
+    }
+    private void joinIdLocalidade(int idl){
+        String url = "https://unhelmeted-mint.000webhostapp.com/myslim/api/localidade/" + idl;
 
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
-
+                String result = response.replace("\"", " ");
+                caixa8.setText(result);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+            }
+        });
+        queue.add(request);
     }
 }
