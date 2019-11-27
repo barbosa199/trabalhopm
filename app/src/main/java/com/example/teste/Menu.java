@@ -434,10 +434,10 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
                     array.clear();
                 }
 
-                String url2 = "https://unhelmeted-mint.000webhostapp.com/myslim/api/somasc/" + id_user;
+                String url4 = "https://unhelmeted-mint.000webhostapp.com/myslim/api/ordemmasc/" + id_user;
 
-                JsonObjectRequest jsObjRequest2 = new JsonObjectRequest
-                        (Request.Method.GET, url2, null, new Response.Listener<JSONObject>() {
+                JsonObjectRequest jsObjRequest4 = new JsonObjectRequest
+                        (Request.Method.GET, url4, null, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
@@ -462,7 +462,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
                                 Log.d("Erro", error.toString());
                             }
                         });
-                MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest2);
+                MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest4);
 
                 break;
             default:
