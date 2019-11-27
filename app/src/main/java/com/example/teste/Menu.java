@@ -430,6 +430,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
 
                 break;
             case R.id.soMasc:
+                /*
                 if(!array.isEmpty()) {
                     array.clear();
                 }
@@ -465,6 +466,7 @@ public class Menu extends AppCompatActivity implements SensorEventListener {
                 MySingleton.getInstance(Menu.this).addToRequestQueue(jsObjRequest2);
 
                 break;
+                */
             default:
                 return super.onOptionsItemSelected(item);
         }
